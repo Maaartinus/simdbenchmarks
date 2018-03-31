@@ -61,11 +61,11 @@ public class HashCode {
 		int a2 = 0;
 		int a3 = 1;
 		int i = 0;
-		for (; i + 7 < data.length; i += 8) {
-			a0 = P8 * a0 + data[i+0];
-			a1 = P8 * a1 + data[i+1];
-			a2 = P8 * a2 + data[i+2];
-			a3 = P8 * a3 + data[i+3];
+		for (; i + 3 < data.length; i += 4) {
+			a0 = P4 * a0 + data[i+0];
+			a1 = P4 * a1 + data[i+1];
+			a2 = P4 * a2 + data[i+2];
+			a3 = P4 * a3 + data[i+3];
 		}
 		int sum = (P3 * a0 + P2 * a1 + P1 * a2 + P0 * a3);
 		if (i + 1 < data.length) {
@@ -77,25 +77,6 @@ public class HashCode {
 		}
 		return sum;
 	}
-
-    @Benchmark
-    @CompilerControl(CompilerControl.Mode.DONT_INLINE)
-    public int Shiny8HashCode(HashCodeData state) {
-        int[] a = state.data;
-        if (a == null)
-            return 0;
-        return shiny8HashCode(a);
-    }
-
-    @Benchmark
-    @CompilerControl(CompilerControl.Mode.DONT_INLINE)
-    public int Shiny4HashCode(HashCodeData state) {
-        int[] a = state.data;
-        if (a == null)
-            return 0;
-        return shiny4HashCode(a);
-    }
-
 
     @Param({
             "256",
@@ -186,6 +167,18 @@ public class HashCode {
         return result;
     }
 
+
+    @Benchmark
+    @CompilerControl(CompilerControl.Mode.DONT_INLINE)
+    public int Shiny8HashCode() {
+        return data == null ? 0 : shiny8HashCode(data);
+    }
+
+    @Benchmark
+    @CompilerControl(CompilerControl.Mode.DONT_INLINE)
+    public int Shiny4HashCode() {
+        return data == null ? 0 : shiny8HashCode(data);
+    }
 
 
 }
